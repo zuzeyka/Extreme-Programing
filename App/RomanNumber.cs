@@ -9,25 +9,21 @@ namespace App
     public class RomanNumber
     {
         public int Value { get; set; }
-        public static RomanNumber Parse(String input)
+
+        private static Dictionary<string, int>
+            romanNumerals =
+                new Dictionary<string, int>() { { "I", 1 }, { "II", 2 } };
+
+        public static RomanNumber Parse(string input)
         {
-            var value = 0;
-            switch (input)
+            if (romanNumerals.TryGetValue(input, out int value))
             {
-                case "I":
-                    value = 1;
-                    break;
-                case "II":
-                    value = 2;
-                    break;
-                default:
-                    value = 0;
-                    break;
+                return new RomanNumber { Value = value };
             }
-            return new()
+            else
             {
-                Value = value
-            };
+                return new RomanNumber { Value = 0 };
+            }
         }
     }
 }
