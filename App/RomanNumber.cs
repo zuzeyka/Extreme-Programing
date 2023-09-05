@@ -10,20 +10,33 @@ namespace App
     {
         public int Value { get; set; }
 
-        private static Dictionary<string, int>
-            romanNumerals =
-                new Dictionary<string, int>() { { "I", 1 }, { "II", 2 } };
-
         public static RomanNumber Parse(string input)
         {
-            if (romanNumerals.TryGetValue(input, out int value))
+            if (String.IsNullOrEmpty(input))
             {
-                return new RomanNumber { Value = value };
+                throw new ArgumentNullException(nameof(input));
             }
-            else
+            if (input == "N") return new();
+            int prev = 0;
+            int current;
+            int result = 0;
+            int lastDigitIndex = input[0] == '-' ? 1 : 0;
+            for (int i = input.Length - 1; i >= lastDigitIndex; i--)
             {
-                return new RomanNumber { Value = 0 };
+                current = input[i] switch
+                {
+                    'I' => 1,
+                    'V' => 5,
+                    'X' => 10,
+                    'L' => 50,
+                    'C' => 100,
+                    'D' => 500,
+                    'M' => 1000,
+                };
+                result += prev <= current ? current : -current;
+                prev = current;
             }
+            return new() { Value = result * (1 - 2 * lastDigitIndex) };
         }
     }
 }
