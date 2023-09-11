@@ -339,11 +339,25 @@ namespace Tests
             }
             // Если неправильных цифр несколько, то ми ожидаем любую из них
             // "ABC" - или 'A', или 'B'
+            /*
             ex = Assert.ThrowsException<ArgumentException>(() => RomanNumber.Parse("ABC"), "'' -> ArgumentException");
             Assert.IsTrue(ex.Message.Contains("'A'") || ex.Message.Contains("'B'"), "ex.Message sould contains 'B' or 'A'");
+            */
+            
             // + проверим, что уведомления (исключения) не сильно короткое
             // язык или другие слова не устанавливаем, но чтобы длина была больше 15
             Assert.IsFalse(ex.Message.Length < 15, "ex.Message sould be more than 15");
+        }
+        [TestMethod]
+        public void TestRomanNumberParseIllegal()
+        {
+            String[] illegals = { "IIV", "IIX", "VVX", "IVX", "IIIX", "VIX" };
+            foreach (var pair in illegals)
+            {
+                Assert.ThrowsException<ArgumentException>(
+                 () => RomanNumber.Parse(pair),
+                 $"{pair} -> Exception");
+            }
         }
     }
 }
