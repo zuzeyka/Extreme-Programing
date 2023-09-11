@@ -6,21 +6,6 @@ namespace Tests
     public class UnitTestApp
     {
         [TestMethod]
-        public void RandomTest()
-        {
-            const int minRange = -3000;
-            const int maxRange = 3000;
-            
-            var random = new Random();
-            
-            for (int i = 0; i < 256; i++)
-            {
-                int num = random.Next(minRange, maxRange);
-                Assert.AreEqual(num, RomanNumber.Parse(new RomanNumber(num).ToString()).Value, $"num = {num}");
-            }
-        }
-
-        [TestMethod]
         public void TestToString()
         {
             Dictionary<int, String> testCases = new()
@@ -170,172 +155,207 @@ namespace Tests
                 {-2987, "-MMCMLXXXVII" },
                 {-2998, "-MMCMXCVIII"},
             };
-            foreach (var pair in testCases)
+            foreach (var testCase in testCases)
             {
-                Assert.AreEqual(pair.Value, new RomanNumber(pair.Key).ToString(),
-                $"{pair.Key}.ToString() == '{pair.Value}'");
+                Assert.AreEqual(testCase.Value, new RomanNumber(testCase.Key).ToString(), $"{testCase.Key}.ToString() == '{testCase.Value}'");
             }
-            Assert.AreEqual("N", new RomanNumber().ToString(), $"new RomanNumber().ToString() == 'N'");
+            Random r = new Random();
+            for (int i = 0; i < 256; i++)
+            {
+                int number = r.Next(-3000, 3001);
+                Assert.AreEqual(number, RomanNumber.Parse(new RomanNumber(number).ToString()).Value, $"{number}.ToString == {new RomanNumber(number).ToString()}");
+            }
+            // Тест без аргументу
+            Assert.AreEqual("N", new RomanNumber().ToString(), $"new RomanNumber() = 'N'");
         }
-        private static Dictionary<string, int>
-            parseTest =
-                new Dictionary<string, int>()
-                {
-                    { "I", 1 },
-                    { "II", 2 },
-                    { "III", 3 },
-                    { "IIII", 4 },
-                    { "IV", 4 },
-                    { "V", 5 },
-                    { "VI", 6 },
-                    { "VII", 7 },
-                    { "VIII", 8 },
-                    { "IX", 9 },
-                    { "X", 10 },
-                    { "VV", 10 },
-                    { "IIIIIIIIII", 10 },
-                    { "VX", 5 },
-                    { "N", 0 },
-                    { "-L", -50 },
-                    { "-XL", -40 },
-                    { "-IL", -49 },
-                    { "-D", -500 },
-                    { "-C", -100 },
-                    { "-M", -1000 },
-                    { "D", 500 },
-                    { "C", 100 },
-                    { "M", 1000 },
-                    { "IM", 999 },
-                    { "-IM", -999 },
-                    { "IC", 99 },
-                    { "-IC", -99 },
-                    { "ID", 499 },
-                    { "-ID", -499 },
-                    { "VM", 995 },
-                    { "-VM", -995 },
-                    { "VC", 95 },
-                    { "-VC", -95 },
-                    { "VD", 495 },
-                    { "-VD", -495 },
-                    { "XM", 990 },
-                    { "-XM", -990 },
-                    { "XC", 90 },
-                    { "-XC", -90 },
-                    { "XD", 490 },
-                    { "-XD", -490 },
-                    { "MI", 1001 },
-                    { "-MI", -1001 },
-                    { "CI", 101 },
-                    { "-CI", -101 },
-                    { "DI", 501 },
-                    { "-DI", -501 },
-                    { "MV", 1005 },
-                    { "-MV", -1005 },
-                    { "CV", 105 },
-                    { "-CV", -105 },
-                    { "DV", 505 },
-                    { "-DV", -505 },
-                    { "MX", 1010 },
-                    { "-MX", -1010 },
-                    { "CX", 110 },
-                    { "-CX", -110 },
-                    { "DX", 510 },
-                    { "-DX", -510 },
-                    { "LX", 60 },
-                    { "LXII", 62 },
-                    { "CCL", 250 },
-                    { "-CCIII", -203 },
-                    { "-LIV", -54 },
-                    { "MDII", 1502 },
-                    { "DD", 1000 },
-                    { "CCCCC", 500 },
-                    { "IVIVIVIVIV", 20 },
-                    { "MMMMMMMMMM", 10000 },
-                    { "-MMMMMMMMMM", -10000 },
-                    { "VVVVVVVVVV", 50 },
-                    { "-VVVVVVVVVV", -50 },
-                    { "XX", 20 },
-                    { "XXI", 21 },
-                    { "XXII", 22 },
-                    { "XXIII", 23 },
-                    { "XXIV", 24 },
-                    { "XXV", 25 },
-                    { "XXVI", 26 },
-                    { "XXVII", 27 },
-                    { "XXVIII", 28 },
-                    { "XXIX", 29 },
-                    { "XXX", 30 },
-                    { "XXXI", 31 },
-                    { "XXXII", 32 },
-                    { "XXXIII", 33 },
-                    { "XXXIV", 34 },
-                    { "XXXV", 35 },
-                    { "XXXVI", 36 },
-                    { "XXXVII", 37 },
-                    { "XXXVIII", 38 },
-                    { "XXXIX", 39 },
-                    { "XXXX", 40 },
-                    { "XXXXI", 41 },
-                    { "XXXXII", 42 },
-                    { "XXXXIII", 43 },
-                    { "XXXXIV", 44 },
-                    { "XXXXV", 45 },
-                    { "XXXXVI", 46 },
-                    { "XXXXVII", 47 },
-                    { "XXXXVIII", 48 },
-                    { "XXXXIX", 49 },
-                    { "XXXXV ", 45 },
-                    { " XXXXVI ", 46 },
-                    { "\nXXXXVIII\t", 48 },
-                };
+        private static Dictionary<String, int> parseTests = new()
+        {
+            { "I"          , 1    },
+            { "II"         , 2    },
+            { "III"        , 3    },
+            { "IIII"       , 4    }, // Особливі твердження - з них ми визначаємо про
+            { "IV"         , 4    }, // підтримку неоптимальних записів чисел
+            { "V"          , 5    },
+            { "VI"         , 6    },
+            { "VII"        , 7    },
+            { "VIII"       , 8    },
+            { "IX"         , 9    },
+            { "X"          , 10   },
+            { "VV"         , 10   },  // Ще одне наголошення неоптимальності
+            { "IIIIIIIIII" , 10   },  // Ще одне наголошення неоптимальності
+            { "VX"         , 5    },  // Ще одне наголошення неоптимальності
+            { "N"          , 0    },  // Доповнюємо множину чисел нулем
+            { "-L"         , -50  },
+            { "-XL"        , -40  },
+            { "-IL"        , -49  },  // Неоптимальність
+            { "-D"         , -500 },
+            { "-C"         , -100 },
+            { "-M"         , -1000 },
+            { "D"          , 500 },
+            { "C"          , 100 },
+            { "M"          , 1000 },
+            { "IM"         , 999 },
+            { "-IM"        , -999 },
+            { "IC"         , 99 },
+            { "-IC"        , -99 },
+            { "ID"         , 499 },
+            { "-ID"        , -499 },
+            { "VM"         , 995 },
+            { "-VM"        , -995 },
+            { "VC"         , 95 },
+            { "-VC"        , -95 },
+            { "VD"         , 495 },
+            { "-VD"        , -495 },
+            { "XM"         , 990 },
+            { "-XM"        , -990 },
+            { "XC"         , 90 },
+            { "-XC"        , -90 },
+            { "XD"         , 490 },
+            { "-XD"        , -490 },
+            { "MI"         , 1001 },
+            { "-MI"        , -1001 },
+            { "CI"         , 101 },
+            { "-CI"        , -101 },
+            { "DI"         , 501 },
+            { "-DI"        , -501 },
+            { "MV"         , 1005 },
+            { "-MV"        , -1005 },
+            { "CV"         , 105 },
+            { "-CV"        , -105 },
+            { "DV"         , 505 },
+            { "-DV"        , -505 },
+            { "MX"         , 1010 },
+            { "-MX"        , -1010 },
+            { "CX"         , 110 },
+            { "-CX"        , -110 },
+            { "DX"         , 510 },
+            { "-DX"        , -510 },/////////////  
+            {"LX"          , 60 },
+            {"LXII"        , 62 },
+            {"CCL"         , 250 },
+            {"-CCIII"      , -203 },
+            {"-LIV"        ,  -54},
+            {"MDII"        , 1502 },
+            //{"-CCM"        , -800 },
+            {"DD"          ,1000 },
+            {"CCCCC"       ,500 },
+            {"IVIVIVIVIV"  ,20 },
+            {"CDIV"        ,404},
+            {"CDIV\t"        ,404},
+            {"CDIV\n"        ,404},
+            {"CDIV "        ,404},
+            {" CDIV "        ,404},
+            {"\tCDIV\n"        ,404},
+            { "CCCC"         , 400 },
+            { "LM"         , 950 },
+            { "CDX"         , 410 },
+            { "DDD"         , 1500 },
+            { "MDCC"         , 1700 },
+            { "DDDIV"         , 1504 },
+            { "MMMM"         , 4000 },
+            { "-MMMM"         , -4000 },
+            { "-MMM"         , -3000 },
+            { "MMM"         , 3000 },
+            { "MMMMI"         , 4001 },
+            { "-MMMMI"         , -4001 },
+            { "-MMMI"         , -3001 },
+            { "MMMI"         , 3001 },
+            { "MMMMV"         , 4005 },
+            { "-MMMMV"         , -4005 },
+            { "-MMMV"         , -3005 },
+            { "MMMV"         , 3005 },
+            { "MMMMX"         , 4010 },
+            { "-MMMMX"         , -4010 },
+            { "-MMMX"         , -3010 },
+            { "MMMX"         , 3010 },
+            { "MMMMXV"         , 4015 },
+            { "-MMMMXV"         , -4015 },
+            { "-MMMXV"         , -3015 },
+            { "MMMXV"         , 3015 },
+        };
 
         [TestMethod]
         public void TestRomanNumberParseValid()
         {
-            Assert.AreEqual(1, RomanNumber.Parse("I").Value, "1 == I");
-
-            foreach (var item in parseTest)
+            /*Assert.AreEqual(            // RomanNumber.Parse("I").Value == 1
+                1,                      // Значення, що очікується (що має бути, правильний варіант)
+                RomanNumber             // Актуальнее значення (те, що вирахуване)
+                    .Parse("I")         //  
+                    .Value,             //
+                "1 == I"                //
+                );                      // Повідомленя, що з'явиться при провалі тесту
+            Assert.AreEqual(
+                2,
+                RomanNumber
+                    .Parse("II")
+                    .Value,
+                "2 == II"
+                );
+            Assert.AreEqual(
+                3,
+                RomanNumber
+                    .Parse("III")
+                    .Value,
+                "3 == III"
+                );*/
+            foreach (var pair in parseTests)
             {
-                Assert
-                    .AreEqual(item.Value,
-                    RomanNumber.Parse(item.Key).Value,
-                    $"{item.Value} == {item.Key}");
+                Assert.AreEqual(
+               pair.Value,
+               RomanNumber
+                   .Parse(pair.Key)
+                   .Value,
+               $"{pair.Key} == {pair.Value}"
+               );
             }
+
         }
 
         [TestMethod]
         public void TestRomanNumberParseNonValid()
         {
             // Тестирование с неправильными формами чисел
-            Assert
-                .ThrowsException<ArgumentException>(() => RomanNumber.Parse(""),
-                " -> ArgumentException");
-            Assert
-                .ThrowsException<ArgumentException>(() => RomanNumber.Parse(null!),
-                "null -> ArgumentException");
+            Assert.ThrowsException<ArgumentException>(
+            () => RomanNumber.Parse(""),
+            "'' -> Exception");
+            Assert.ThrowsException<ArgumentException>(
+            () => RomanNumber.Parse(null!),
+            "null -> Exception");
+            Assert.ThrowsException<ArgumentException>(
+            () => RomanNumber.Parse("   "),
+            "\"    \"    -> Exception");
             // самое исключение которое произошло в лямде возвращается как результат
-            var ex = Assert
-                .ThrowsException<ArgumentException>(() => RomanNumber.Parse("XBC"),
-                "'' -> ArgumentException");
+            var ex = Assert.ThrowsException<ArgumentException>(
+            () => RomanNumber.Parse("XBC"),
+            "ABC -> Exception");
+            Assert.IsTrue(ex.Message.Contains('B'), "ex.Message.Contains 'B' ");
+            ex = Assert.ThrowsException<ArgumentException>(
+                () => RomanNumber.Parse("ABC"),
+                "'' -> Exception");
+            Assert.IsTrue(ex.Message.Contains('A') && ex.Message.Contains('B'),
+                "'ABC' ex.Message should contain either 'A' and 'B'");
             // требуем чтобы ведомости про неправильную цифру были включенны в сообщение исключения
-            Assert.IsTrue(ex.Message.Contains("'B'"), "ex.Message sould contains 'B' ");
-            String testCase = "Xx";
-            Dictionary<string, char> testCases = new()
+            Assert.IsFalse(
+                   ex.Message.Length < 15,
+                   "ex.Message.Length min 15"
+                   );
+            Dictionary<String, char> testCases = new()
             {
                 { "Xx", 'x' },
                 { "Xy", 'y' },
                 { "AX", 'A' },
                 { "X C", ' ' },
                 { "X\tC", '\t' },
-                { "X\nC", '\n' }
+                { "X\nC", '\n' },
             };
             foreach (var pair in testCases)
             {
-                // избавляемся от переменной ex - делаем вложенные выражения
-                Assert.IsTrue(Assert.ThrowsException<ArgumentException>(
+                // Виключаємо змінну ex, робимо вкладені вирази
+                ex = Assert.ThrowsException<ArgumentException>(
                 () => RomanNumber.Parse(pair.Key),
-                $"'{pair.Key}' -> ArgumentException").Message.Contains($"'{pair.Value}'"),
-                $"'{pair.Key}' ex.Message sould contains '{pair.Value}'");
+                $"'{pair.Key}' -> ArgumentException");
+                Assert.IsTrue(ex.Message.Contains($"'{pair.Value}'"),
+                $"'{pair.Key}' ex.Message({ex.Message}) sould contains '{pair.Value}'");
             }
             // Если неправильных цифр несколько, то ми ожидаем любую из них
             // "ABC" - или 'A', или 'B'
@@ -343,11 +363,11 @@ namespace Tests
             ex = Assert.ThrowsException<ArgumentException>(() => RomanNumber.Parse("ABC"), "'' -> ArgumentException");
             Assert.IsTrue(ex.Message.Contains("'A'") || ex.Message.Contains("'B'"), "ex.Message sould contains 'B' or 'A'");
             */
-            
+
             // + проверим, что уведомления (исключения) не сильно короткое
             // язык или другие слова не устанавливаем, но чтобы длина была больше 15
-            Assert.IsFalse(ex.Message.Length < 15, "ex.Message sould be more than 15");
         }
+
         [TestMethod]
         public void TestRomanNumberParseIllegal()
         {
