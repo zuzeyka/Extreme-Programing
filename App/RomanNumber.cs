@@ -9,6 +9,12 @@ namespace App
 {
     public class RomanNumber
     {
+        private const char ZERO_DIGIT = 'N';
+        private const char MINUS_DIGIT = '-';
+        private const char QOUTE_DIGIT = '\'';
+        private const string INVALID_ROMAN_DIGIT = "Invalid Roman digit(s):";
+        private const string EMPTPY_INPUT_MESSAGE = "Null or empty input";
+        private const string DIGITS_SEPARATOR = ", ";
         public int Value { get; set; }
         public RomanNumber(int value = 0)
         {
@@ -36,11 +42,11 @@ namespace App
                 { 4, "IV" },
                 { 1, "I" }
             };
-            if (Value == 0) return "N";
+            if (Value == 0) return ZERO_DIGIT.ToString();
             bool isNegative = Value < 0;
             var number = isNegative ? -Value : Value;
             StringBuilder sb = new();
-            if (isNegative) sb.Append("-");
+            if (isNegative) sb.Append(MINUS_DIGIT);
             foreach (var part in parts)
             {
                 while (number >= part.Key)
@@ -55,7 +61,7 @@ namespace App
         {
             return digit switch
             {
-                'N' => 0,
+                ZERO_DIGIT => 0,
                 'I' => 1,
                 'V' => 5,
                 'X' => 10,
@@ -63,7 +69,7 @@ namespace App
                 'C' => 100,
                 'D' => 500,
                 'M' => 1000,
-                _ => throw new ArgumentException($"Invalid Roman didgit in digit: '{digit}'")
+                _ => throw new ArgumentException($"{INVALID_ROMAN_DIGIT} {QOUTE_DIGIT}{digit}{QOUTE_DIGIT}")
             };
         }
 
@@ -71,7 +77,7 @@ namespace App
         {
             int maxDigit = 0;
             int lessDigitsCount = 0;
-            int lastDigitIndex = input.StartsWith('-') ? 1 : 0;
+            int lastDigitIndex = input.StartsWith(MINUS_DIGIT) ? 1 : 0;
             int digitValue = 0;
 
             for (int i = input.Length - 1; i >= lastDigitIndex; i--)
@@ -89,9 +95,9 @@ namespace App
         {
             if (String.IsNullOrEmpty(input))
             {
-                throw new ArgumentException("Null or empty input");
+                throw new ArgumentException(EMPTPY_INPUT_MESSAGE);
             }
-            if (input.StartsWith('-'))
+            if (input.StartsWith(MINUS_DIGIT))
                 input = input[1..];
             List<char> invalidChars = new();
             foreach (char c in input)
@@ -101,8 +107,8 @@ namespace App
             }
             if (invalidChars.Count > 0)
             {
-                String chars = String.Join(", ", invalidChars.Select(
-                    c => $"'{c}'"));
+                String chars = String.Join(DIGITS_SEPARATOR, invalidChars.Select(
+                    c => $"{QOUTE_DIGIT}{c}{QOUTE_DIGIT}"));
                 throw new ArgumentException($"Invalid Roman didgit in digits: {chars}");
             }
         }
@@ -114,9 +120,9 @@ namespace App
 
             CheckValidityOrThrow(input);
             CheckLegalityOrThrow(input);
-            if (input == "N") return new();
+            if (input == ZERO_DIGIT.ToString()) return new();
 
-            int lastDigitIndex = input[0] == '-' ? 1 : 0;
+            int lastDigitIndex = input[0] == MINUS_DIGIT ? 1 : 0;
 
             int prev = 0;
             int result = 0;
@@ -156,7 +162,12 @@ namespace App
               * и дальше сравниваем со следующей цифрой.
               */
         }
-
+        public RomanNumber Add(RomanNumber other)
+        {
+            if (other == null)
+                throw new ArgumentNullException($"Cannot Add null object: {nameof(other)}");
+            return new() { Value = Value + other.Value };
+        }
     }
 }
 

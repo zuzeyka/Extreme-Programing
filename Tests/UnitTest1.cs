@@ -379,6 +379,22 @@ namespace Tests
                  $"{pair} -> Exception");
             }
         }
+        [TestMethod]
+        public void TestAdd()
+        {
+            RomanNumber r1 = new(10);
+            RomanNumber r2 = new(20);
+            Assert.IsInstanceOfType(r1.Add(r2), typeof(RomanNumber));
+            Assert.AreEqual("XXX", r1.Add(r2).ToString());
+            Assert.AreEqual(30, r1.Add(r2).Value);
+            Assert.AreEqual("XXX", r2.Add(r1).ToString());
+            Assert.AreEqual(30, r2.Add(r1).Value);
+            var ex = Assert.ThrowsException<ArgumentException>(
+                () => r1.Add(null!),
+                "r1.Add(null!) -> ArgumentException"
+            );
+            Assert.IsTrue(ex.Message.Contains("Cannot Add null object", StringComparison.OrdinalIgnoreCase), $"ex.Message({ex.Message}) contains 'Cannot Add null object'");
+        }
     }
 }
 /*
