@@ -173,7 +173,12 @@ namespace App
             // this with {x = 10} - x меняется, а все остальное - нет
         }
 
-        public RomanNumber Sum()
+        public RomanNumber Sum(IEnumerable<RomanNumber> numbers)
+        {
+            if (numbers == null)
+                throw new ArgumentNullException(String.Format(NULL_MESSAGE_PATTERN, ADD_NULL_MESSAGE, nameof(numbers)));
+            return numbers.Aggregate(this, (current, next) => current.Add(next));
+        }
     }
 }
 
