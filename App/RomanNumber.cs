@@ -7,13 +7,15 @@ using System.Threading.Tasks.Sources;
 
 namespace App
 {
-    public class RomanNumber
+    public record RomanNumber
     {
         private const char ZERO_DIGIT = 'N';
         private const char MINUS_DIGIT = '-';
         private const char QOUTE_DIGIT = '\'';
         private const string INVALID_ROMAN_DIGIT = "Invalid Roman digit(s):";
         private const string EMPTPY_INPUT_MESSAGE = "Null or empty input";
+        private const string ADD_NULL_MESSAGE = "Cannot Add null object";
+        private const string NULL_MESSAGE_PATTERN = "{0}: '{1}'";
         private const string DIGITS_SEPARATOR = ", ";
         public int Value { get; set; }
         public RomanNumber(int value = 0)
@@ -165,9 +167,13 @@ namespace App
         public RomanNumber Add(RomanNumber other)
         {
             if (other == null)
-                throw new ArgumentNullException($"Cannot Add null object: {nameof(other)}");
-            return new() { Value = Value + other.Value };
+                throw new ArgumentNullException(String.Format(NULL_MESSAGE_PATTERN, ADD_NULL_MESSAGE, nameof(other)));
+            return this with { Value = Value + other.Value };
+            // клонирование с изменениями this with { } - полное клонирование
+            // this with {x = 10} - x меняется, а все остальное - нет
         }
+
+        public RomanNumber Sum()
     }
 }
 

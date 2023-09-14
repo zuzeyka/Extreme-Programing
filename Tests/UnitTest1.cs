@@ -389,11 +389,14 @@ namespace Tests
             Assert.AreEqual(30, r1.Add(r2).Value);
             Assert.AreEqual("XXX", r2.Add(r1).ToString());
             Assert.AreEqual(30, r2.Add(r1).Value);
-            var ex = Assert.ThrowsException<ArgumentException>(
+            var ex = Assert.ThrowsException<ArgumentNullException>(
                 () => r1.Add(null!),
-                "r1.Add(null!) -> ArgumentException"
+                "r1.Add(null!) -> ArgumentNullException"
             );
-            Assert.IsTrue(ex.Message.Contains("Cannot Add null object", StringComparison.OrdinalIgnoreCase), $"ex.Message({ex.Message}) contains 'Cannot Add null object'");
+            Assert.IsTrue(ex.Message.Contains("Cannot Add null object", StringComparison.OrdinalIgnoreCase), 
+                $"ex.Message({ex.Message}) contains 'Cannot Add null object'");
+
+            Assert.AreNotSame(r2, r2.Add(r1), "Add() should returns new item");
         }
     }
 }
