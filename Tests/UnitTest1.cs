@@ -398,6 +398,62 @@ namespace Tests
 
             Assert.AreNotSame(r2, r2.Add(r1), "Add() should returns new item");
         }
+
+        [TestMethod]
+        public void TestSum()
+        {
+            RomanNumber r1 = new(10);
+            RomanNumber r2 = new(20);
+            var r3 = RomanNumber.Sum(r1, r2);
+            Assert.IsInstanceOfType(r3, typeof(RomanNumber));
+            Assert.AreNotSame(r3, r1);
+            Assert.AreNotSame(r3, r2);
+
+            Assert.AreEqual(60, RomanNumber.Sum(r1, r2, r3).Value);
+
+            var ex = Assert.ThrowsException<ArgumentNullException>(
+                () => RomanNumber.Sum(null!),
+                "Sum(null!) ThrowsException: ArgumentNullException");
+            String expectedFragment = "Invalid Sum() invocation with NULL argument";
+            // ďîâłäîěëĺíí˙ âčęëţ÷ĺíí˙ ěłńňčňü çŕ˙âëĺíčé ôđŕăěĺíň
+            Assert.IsTrue(
+                ex.Message.Contains(
+                    expectedFragment,
+                    StringComparison.InvariantCultureIgnoreCase
+                ),
+                $"ex.Message({ex.Message}) contains '{expectedFragment}'"
+            );
+            var emptyArr = Array.Empty<RomanNumber>();  // ďîđîćíčé ďĺđĺëłę ŕđăóěĺíňłâ
+            Assert.AreEqual(0, RomanNumber.Sum(emptyArr).Value, "Sum(empty) == 0");
+            Assert.AreEqual(0, RomanNumber.Sum().Value, "Sum() == 0");
+
+            Assert.AreEqual(10, RomanNumber.Sum(r1).Value, "Sum(r1) == 10");
+
+            Assert.AreEqual(0, RomanNumber.Sum(new(10), new(-10)).Value);
+            Assert.AreEqual(-1, RomanNumber.Sum(new(10), new(-11)).Value);
+            Assert.AreEqual(1, RomanNumber.Sum(new(10), new(-9)).Value);
+            Random rnd = new();
+            for (int i = 0; i < 200; i += 1)
+            {
+                int x = rnd.Next(-3000, 3000);
+                int y = rnd.Next(-3000, 3000);
+                Assert.AreEqual(
+                    x + y,
+                    RomanNumber.Sum(new(x), new(y)).Value,
+                    $"{x} + {y} == {x + y}"
+                );
+            }
+            for (int i = 0; i < 200; i += 1)
+            {
+                RomanNumber x = new(rnd.Next(-3000, 3000));
+                RomanNumber y = new(rnd.Next(-3000, 3000));
+                Assert.AreEqual(
+                    x.Add(y).Value,
+                    RomanNumber.Sum(x, y).Value,
+                    $"{x}, {y} Add == Sum"
+                );
+            }
+        }
     }
 }
 /*

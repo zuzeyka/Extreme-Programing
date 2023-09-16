@@ -16,7 +16,9 @@ namespace App
         private const string EMPTPY_INPUT_MESSAGE = "Null or empty input";
         private const string ADD_NULL_MESSAGE = "Cannot Add null object";
         private const string NULL_MESSAGE_PATTERN = "{0}: '{1}'";
+        private const String SUM_NULL_MESSAGE = "Invalid Sum() invocation with NULL argument";
         private const string DIGITS_SEPARATOR = ", ";
+        private const String INVALID_DATA_SUM_MESSAGE = "Invalid Sum() invocation with NULL argument: ";
         public int Value { get; set; }
         public RomanNumber(int value = 0)
         {
@@ -173,12 +175,48 @@ namespace App
             // this with {x = 10} - x меняется, а все остальное - нет
         }
 
-        public RomanNumber Sum(IEnumerable<RomanNumber> numbers)
+        public static RomanNumber Sum(params RomanNumber[] arr_r)
         {
-            if (numbers == null)
-                throw new ArgumentNullException(String.Format(NULL_MESSAGE_PATTERN, ADD_NULL_MESSAGE, nameof(numbers)));
-            return numbers.Aggregate(this, (current, next) => current.Add(next));
+            if (arr_r is null)
+            {
+                throw new ArgumentNullException(
+                    String.Format(
+                        NULL_MESSAGE_PATTERN,
+                        SUM_NULL_MESSAGE,
+                        nameof(arr_r)));
+            }
+
+            // return arr_r.Aggregate((r1, r2) => r1.Add(r2));
+
+            // RomanNumber sum = new(0);
+            // for (int i = 0; i < arr_r.Length; i++)
+            // {
+            //     sum.Value += arr_r[i].Value;
+            // }
+            // foreach (var r in arr_r)
+            // {
+            //     sum.Value += r.Value;
+            // }
+
+            int res = 0;
+            foreach (var r in arr_r)
+            {
+                res += r.Value;
+            }
+            return new(res);
+
+            // return new(arr_r.Sum(n => n.Value));
+
         }
+        /* public RomanNumber Add(params RomanNumber[] numbers)
+        {
+            RomanNumber sum = this;
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                sum.Value += numbers[i].Value;
+            }
+            return sum;
+        }*/
     }
 }
 
