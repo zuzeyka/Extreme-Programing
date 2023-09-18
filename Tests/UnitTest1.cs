@@ -454,6 +454,105 @@ namespace Tests
                 );
             }
         }
+
+        [TestMethod]
+        public void TestEvalAddition()
+        {
+            Assert.AreEqual("XLIV", RomanNumber.Eval("IV + XL"));
+        }
+        
+        [TestMethod]
+        public void TestEvalSubtraction()
+        {
+            Assert.AreEqual("VI", RomanNumber.Eval("X - IV"));
+        }
+        
+        [TestMethod]
+        public void TestEvalInvalidExpression()
+        {
+            Assert.ThrowsException<ArgumentException>(() => RomanNumber.Eval("Invalid Expression"));
+        }
+        
+        
+        [TestMethod]
+        public void TestRomanNumberSubtractNotNull()
+        {
+            RomanNumber roman1 = new RomanNumber(10);
+            RomanNumber roman2 = new RomanNumber(5);
+        
+            Assert.IsNotNull(RomanNumber.Eval($"{roman1} - {roman2}"));
+        }
+        
+        [TestMethod]
+        public void TestRomanNumberSubtractType()
+        {
+            RomanNumber roman1 = new RomanNumber(10);
+            RomanNumber roman2 = new RomanNumber(5);
+        
+            Assert.IsInstanceOfType(RomanNumber.Eval($"{roman1} - {roman2}"), typeof(RomanNumber));
+        }
+        
+        [TestMethod]
+        public void TestRomanNumberSubtractWithKnownResults()
+        {
+            RomanNumber roman1 = new RomanNumber(10);
+            RomanNumber roman2 = new RomanNumber(5);
+        
+            Assert.AreEqual(new RomanNumber(5), RomanNumber.Eval($"{roman1} - {roman2}"));
+        }
+        
+        [TestMethod]
+        public void TestRomanNumberSubtractWithRandomNumbers()
+        {
+            Random random = new Random();
+        
+            for (int i = 0; i < 100; i++)
+            {
+                int value1 = random.Next(-3000, 3000);
+                int value2 = random.Next(-3000, 3000);
+        
+                RomanNumber roman1 = new RomanNumber(value1);
+                RomanNumber roman2 = new RomanNumber(value2);
+        
+                Assert.AreEqual(roman1.Value - roman2.Value, RomanNumber.Eval($"{RomanNumber.Parse(roman1.ToString())} - {RomanNumber.Parse(roman2.ToString())}"));
+            }
+        }
+        
+        [TestMethod]
+        public void TestRomanNumberSubtractCrossAdd()
+        {
+            Random random = new Random();
+        
+            for (int i = 0; i < 100; i++)
+            {
+                int value1 = random.Next(-3000, 3000);
+                int value2 = random.Next(-3000, 3000);
+        
+                RomanNumber roman1 = new RomanNumber(value1);
+                RomanNumber roman2 = new RomanNumber(value2);
+        
+                Assert.AreEqual(RomanNumber.Sum(roman1, roman2), RomanNumber.Eval($"{RomanNumber.Parse(roman1.ToString())} + {RomanNumber.Parse(roman2.ToString())}"));
+            }
+        }
+        
+        [TestMethod]
+        public void TestRomanNumberSubtractCrossSum()
+        {
+            Random random = new Random();
+        
+            for (int i = 0; i < 100; i++)
+            {
+                int value1 = random.Next(-3000, 3000);
+                int value2 = random.Next(-3000, 3000);
+                RomanNumber roman1 = new RomanNumber(value1);
+                RomanNumber roman2 = new RomanNumber(value2);
+
+                Assert.AreEqual(roman1.Value + roman2.Value, RomanNumber.Sum(roman1, roman2));
+            }
+        }
+        [TestMethod] public void TestEvalInvalidNumbers() { 
+            Dictionary<String, int> illegalCases = new() { {"IIC + II" , 42}, { "X + X + X" , 42}, { "X + X + X" , 42}, { "+X + X" , 20}, { "X + +X" , 20}, { "-X +- X",20 }, { "+X", 10 } }; 
+            foreach (var illegalCase in illegalCases) { Assert.ThrowsException<ArgumentException>( () => RomanNumber.Parse(illegalCase.Key), $"{illegalCase.Key} -> Eval"); } } 
     }
 }
 /*

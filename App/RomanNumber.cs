@@ -175,6 +175,74 @@ namespace App
             // this with {x = 10} - x меняется, а все остальное - нет
         }
 
+        public RomanNumber Subtract(RomanNumber other)
+        {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other), "The 'other' RomanNumber cannot be null.");
+            }
+        
+            int resultValue = this.Value - other.Value;
+        
+            return new RomanNumber(resultValue);
+        }
+        
+        public static RomanNumber Eval(string input)
+        {
+            string[] parts = input.Split(new char[] { '+', '-' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length != 2)
+            {
+                throw new ArgumentException("Invalid expression. Use the format 'RomanNumber + RomanNumber' or 'RomanNumber - RomanNumber'.");
+            }
+
+            int amountOfMinus = 0;
+
+            foreach (var ch in input)
+                {
+                if(ch == '-')
+                {
+                    amountOfMinus++;
+                }
+            }
+            if(amountOfMinus > 1)
+            {
+                throw new ArgumentException(input.Substring(0, amountOfMinus));
+            }
+
+            string operand1 = parts[0].Trim();
+            string operand2 = parts[1].Trim();
+
+            char op = input.FirstOrDefault(c => c == '+' || c == '-');
+
+            if (op == '\0')
+            {
+                throw new ArgumentException("Invalid input. Operator '+' or '-' not found.");
+            }
+
+            RomanNumber result;
+
+            if (op == '+')
+            {
+                result = RomanNumber.Parse(operand1).Add(RomanNumber.Parse(operand2));
+            }
+            else
+            {
+                if (input.StartsWith('-'))
+                {
+                    result = new RomanNumber((RomanNumber.Parse(operand1).Value * -1)).Subtract(RomanNumber.Parse(operand2));
+
+                }
+                else
+                {
+                    result = RomanNumber.Parse(operand1).Subtract(RomanNumber.Parse(operand2));
+                }
+            }
+
+
+            return result;
+        }
+
         public static RomanNumber Sum(params RomanNumber[] arr_r)
         {
             if (arr_r is null)
